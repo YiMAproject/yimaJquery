@@ -1,5 +1,5 @@
 <?php
-namespace cjQuery\Exception;
+namespace yimaJquery\Exception;
 
 class InvalidArgumentException extends \Exception
 {

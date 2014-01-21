@@ -1,14 +1,14 @@
 <?php
-namespace cjQuery\Parts\Container;
+namespace yimaJquery\Parts\Container;
 
 use stdClass;
-use cjQuery\Exception;
+use yimaJquery\Exception;
 use Zend\View\Helper\Placeholder\Container;
 
 class DefaultContainer extends Container
 {
 	/**
-	 * cjQuery\jQuery
+	 * yimaJquery\jQuery
 	 */
 	protected $jQuery;
 	
@@ -62,11 +62,11 @@ class DefaultContainer extends Container
 
                 if (! file_exists($filepath) ) {
                     // this is a uri exp. [http://]/path/to/file
-                    // this structure used by cjQuery\Controller\Script to printout codes
-                    $content = '/cjQuery/js/'.(
+                    // this structure used by yimaJquery\Controller\Script to printout codes
+                    $content = '/yimaJquery/js/'.(
                     ($item['overriding'])
-                        ? \cjQuery\jQuery::getHandler()
-                        : \cjQuery\jQuery::getHandler().'markup'.\cjQuery\jQuery::MARKUP
+                        ? \yimaJquery\jQuery::getHandler()
+                        : \yimaJquery\jQuery::getHandler().'markup'.\yimaJquery\jQuery::MARKUP
                     ).$filepath;
                 }
                 else {
@@ -78,13 +78,13 @@ class DefaultContainer extends Container
                 $content = $item['content'];
                 if ($item['overriding']) {
                     // (function($) { /* some code that uses $ */ })(jQuery) # jQuery is noConflict handler
-                    if ('$' != \cjQuery\jQuery::getHandler()) {
-                        $markup = \cjQuery\jQuery::MARKUP;
+                    if ('$' != \yimaJquery\jQuery::getHandler()) {
+                        $markup = \yimaJquery\jQuery::MARKUP;
                         $content = '(function($) {'.$content."})({$markup});";
                     }
                 }
 
-                $content = str_replace(\cjQuery\jQuery::MARKUP,\cjQuery\jQuery::getHandler(),$content);
+                $content = str_replace(\yimaJquery\jQuery::MARKUP,\yimaJquery\jQuery::getHandler(),$content);
             }
 
         }

@@ -14,21 +14,21 @@ return array(
 
 	'controllers' => array(
 		'invokables' => array(
-			'cjQuery/Controller/Attach' => 'cjQuery\Controller\AttachController'
+			'yimaJquery/Controller/Attach' => 'yimaJquery\Controller\AttachController'
 		),
 	),
 	'router' => array(
 		'routes' => array(
-			'cjQuery' => array(
+			'yimaJquery' => array(
 				'type'    => 'Segment',
 				'options' => array(
-					'route'    => '/cjQuery/js/[:overidding[:filepath]]',
+					'route'    => '/yimaJquery/js/[:overidding[:filepath]]',
 					'constraints' => array(
 						//'overidding' => 'override|regular',
 						'filepath'   => '(/[\w-]+).*',
 					),
 					'defaults' => array(
-						'controller' => 'cjQuery/Controller/Attach',
+						'controller' => 'yimaJquery/Controller/Attach',
 						'action'     => 'script',
 					),
 				),

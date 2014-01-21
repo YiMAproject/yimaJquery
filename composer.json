@@ -1,0 +1,41 @@
+{
+    "name": "rayamedia/yima-jquery",
+    "type": "yima-core-module",
+    "description": "jQuery integration into application.",
+    "keywords": [
+        "jquery",
+        "integration",
+        "zf2 module",
+        "zf2",
+        "yima",
+        "raya media"
+    ],
+    "authors": [
+        {
+            "name": "Payam Naderi",
+            "email": "naderi.payam@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "rayamedia/yima-plugin-installer": "dev-master"
+    },
+    "extra": {
+        "yima-plugin-name": "yimaJquery"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "yimaJquery\\" : "src/"
+        },
+        "classmap" : [
+            "./Module.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.raya-media.com/"
+        }
+    ]
+}

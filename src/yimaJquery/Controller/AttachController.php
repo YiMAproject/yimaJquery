@@ -1,5 +1,5 @@
 <?php
-namespace cjQuery\Controller;
+namespace yimaJquery\Controller;
 
 use SplFileInfo;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -44,8 +44,8 @@ class AttachController extends AbstractActionController
     
     protected function getHttpFile($address)
     {
-    	$cjQueryDir = \cjQuery\Module::getDir(); 
-    	$tmpFolder  = $cjQueryDir.DS.'tmp';
+    	$yimaJqueryDir = \yimaJquery\Module::getDir();
+    	$tmpFolder  = $yimaJqueryDir.DS.'tmp';
     	$fileInfo   = new SplFileInfo($tmpFolder);
     	if (! $fileInfo->isDir() ) {
     		mkdir($tmpFolder);

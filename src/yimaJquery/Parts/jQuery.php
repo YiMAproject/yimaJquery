@@ -1,5 +1,5 @@
 <?php
-namespace cjQuery\Parts;
+namespace yimaJquery\Parts;
 
 class jQuery extends AbstractPart
 {

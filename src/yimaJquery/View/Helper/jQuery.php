@@ -1,7 +1,7 @@
 <?php
-namespace cjQuery\View\Helper;
+namespace yimaJquery\View\Helper;
 
-use cjQuery\jQuery as jQueryController;
+use yimaJquery\jQuery as jQueryController;
 
 use Zend\View\Helper\AbstractHelper;
 
@@ -36,7 +36,7 @@ class jQuery extends AbstractHelper
     public function prepareHeadScript()
     {
         // get scripts from jQuery container and move to headScript
-        $jQuery = \cjQuery\jQuery::getJquery();
+        $jQuery = \yimaJquery\jQuery::getJquery();
         if (! $jQuery) {
             return;
         }

@@ -1,16 +1,16 @@
 <?php
-namespace cjQuery\Parts;
+namespace yimaJquery\Parts;
 
-use cjQuery\jQuery as cjQuery;
-use cjQuery\Exception;
-use cjQuery\Parts\Container\DefaultContainer;
+use yimaJquery\jQuery as yimaJquery;
+use yimaJquery\Exception;
+use yimaJquery\Parts\Container\DefaultContainer;
 
 class AbstractPart 
 {
     /**
-     * @var \cjQuery\jQuery | null
+     * @var \yimaJquery\jQuery | null
      */
-    protected $cjQuery = null;
+    protected $yimaJquery = null;
 	
 	/**
 	 * Path to library
@@ -32,9 +32,9 @@ class AbstractPart
     protected $container;
 	
 
-	public function __construct(cjQuery $cjQuery)
+	public function __construct(yimaJquery $yimaJquery)
 	{
-		$this->cjQuery = $cjQuery;
+		$this->yimaJquery = $yimaJquery;
 	}
 	
 	/**

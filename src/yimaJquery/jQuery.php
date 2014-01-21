@@ -1,5 +1,5 @@
 <?php
-namespace cjQuery;
+namespace yimaJquery;
 
 class jQuery
 {
