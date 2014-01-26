@@ -3,6 +3,8 @@ jQuery Integration Module
 
 *this module is part of Yima Application Framework*
 
+>>> WORK IN PROGRESS, NOT USABLE YET !! <<<
+
 [zf2 module] for integrating jQuery with application modules
 
 Installation
@@ -14,4 +16,4 @@ require ```rayamedia/yima-jquery``` in your ```composer.json```
 
 Or clone to modules folder
 
-Enable module with name ```yimaJquery```
+Enable module in application config

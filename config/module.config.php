@@ -1,16 +1,22 @@
 <?php
 return array(
-	'jQuery'  => array(
-		'cdn' => array(
-			'google' => array(
-				'base_http' 	=> 'http://ajax.googleapis.com/ajax/libs',
-				'base_ssl'  	=> 'https://ajax.googleapis.com/ajax/libs',
-				'jquery_folder' => 'jquery',
-				'jquery_file'   => 'jquery.min.js',	
-				'ui_folder' 	=> 'jqueryui',
-			),
-		),
-	),
+    'yima-jquery' => array(
+        /**
+         * We have a service in manager for each delivery
+         *
+         * exp. registered service as YimaJquery\Deliveries\SelfHosted
+         *      all keys automatic converted to camelCase and get config
+         *      from merged config to approach library address result.
+         */
+        'deliveries'       => array(
+            'google-cdn' => array(
+                // ...
+            ),
+            'self-hosted' => array(
+                // ...
+            ),
+        ),
+    ),
 
 	'controllers' => array(
 		'invokables' => array(

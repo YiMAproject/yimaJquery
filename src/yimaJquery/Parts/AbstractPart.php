@@ -1,17 +1,10 @@
 <?php
 namespace yimaJquery\Parts;
 
-use yimaJquery\jQuery as yimaJquery;
-use yimaJquery\Exception;
-use yimaJquery\Parts\Container\DefaultContainer;
+use yimaJquery\Container\DefaultContainer;
 
 class AbstractPart 
 {
-    /**
-     * @var \yimaJquery\jQuery | null
-     */
-    protected $yimaJquery = null;
-	
 	/**
 	 * Path to library
 	 *
@@ -31,12 +24,6 @@ class AbstractPart
      */
     protected $container;
 	
-
-	public function __construct(yimaJquery $yimaJquery)
-	{
-		$this->yimaJquery = $yimaJquery;
-	}
-	
 	/**
 	 * this magic call allow:
 	 * 
@@ -52,18 +39,18 @@ class AbstractPart
 	 *  $overriding | is a boolean value that wrap (function($) {  some code that uses $ })(jQuery) 
 	 *  			  # jQuery is noConflict handler
 	 *  
-	 * @throws Exception\BadMethodCallException
+	 * @throws \Exception
 	 */
 	public function __call($method, $args)
 	{
 		if (! preg_match('/^(?P<action>(ap|pre)pend)(?P<mode>File|Script|Css|Stylesheet)$/', $method, $matches)) {
-			throw new Exception\BadMethodCallException(sprintf(
+			throw new \Exception(sprintf(
 				'Method "%s" not found.',$method
 			));
 		}
 		
 		if (count($args) === 0 ) {
-			throw new Exception\BadMethodCallException(sprintf(
+			throw new \Exception(sprintf(
 				'Method "%s" requires at least one argument', $method
 			));
 		}
@@ -130,44 +117,4 @@ class AbstractPart
 	
 		return $this;
 	}
-	
-	/**
-	 * Get path to jQuery
-	 *
-	 * @return string
-	 */
-	public function getPathToLibrary()
-	{
-		return $this->libraryPath;
-	}
-
-	
-	/**
-	 * Set the version of the library used.
-	 *
-	 * @param string $version
-	 */
-	public function setVersion($version)
-	{
-		if (is_string($version) && preg_match('/^[1-9]\.[0-9](\.[0-9])?$/', $version)) {
-			$this->version = $version;
-		} else {
-			throw new Exception\InvalidArgumentException(sprintf(
-					'Invalid library version provided "%s"', $version
-			));
-		}
-	
-		return $this;
-	}
-	
-	/**
-	 * Get the version used with the library
-	 *
-	 * @return string
-	 */
-	public function getVersion()
-	{
-		return $this->version;
-	}
-	
 }

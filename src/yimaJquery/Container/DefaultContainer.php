@@ -1,5 +1,5 @@
 <?php
-namespace yimaJquery\Parts\Container;
+namespace yimaJquery\Container;
 
 use stdClass;
 use yimaJquery\Exception;

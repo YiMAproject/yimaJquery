@@ -1,36 +1,54 @@
 <?php
 namespace yimaJquery;
 
-use Zend\Mvc\MvcEvent;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 
-class Module
+/**
+ * Class Module
+ *
+ * @package yimaJquery
+ */
+class Module implements
+    ConfigProviderInterface,
+    AutoloaderProviderInterface,
+    ServiceProviderInterface,
+    ViewHelperProviderInterface
 {
-	public function onBootstrap(MvcEvent $e)
-	{
-		$application  = $e->getApplication();
-		$eventManager = $application->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'jQueryScripts'),1000);
-	}
-
-	public function jQueryScripts(MvcEvent $e)
-	{
-        // get scripts from jQuery container and move to headScript
-        $jQuery = \yimaJquery\jQuery::getJquery();
-        if (!$jQuery) {
-            return;
-        }
-
-        $sm = $e->getApplication()->getServiceManager();
-        $view = $sm->get('ViewRenderer');
-        $view->jQuery()->prepareHeadScript();
-	}
-
-	public function getConfig()
+    /**
+     * Returns configuration to merge with application configuration
+     *
+     * @return array|\Traversable
+     */
+    public function getConfig()
 	{
 		return include __DIR__.'/../../config/module.config.php';
 	}
-	
-	public function getViewHelperConfig()
+
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to
+     * seed such an object.
+     *
+     * @return array|\Zend\ServiceManager\Config
+     */
+    public function getServiceConfig()
+    {
+        return array (
+            'invokables' => array (
+                'YimaJquery\Deliveries\SelfHosted' => 'yimaJquery\Deliveries\SelfHosted',
+            ),
+        );
+    }
+
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to
+     * seed such an object.
+     *
+     * @return array|\Zend\ServiceManager\Config
+     */
+    public function getViewHelperConfig()
 	{
 		return array(
 			'invokables' => array (
@@ -38,8 +56,13 @@ class Module
 			),
 		);
 	}
-		
-	public function getAutoloaderConfig()
+
+    /**
+     * Return an array for passing to Zend\Loader\AutoloaderFactory.
+     *
+     * @return array
+     */
+    public function getAutoloaderConfig()
 	{
 		return array(
 			'Zend\Loader\StandardAutoloader' => array(
@@ -49,10 +72,4 @@ class Module
 			),
 		);
 	}
-	
-	public static function getDir()
-	{
-		return realpath(__DIR__.'/../../');
-	}
-
 }
