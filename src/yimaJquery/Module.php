@@ -36,6 +36,7 @@ class Module implements
     public function getServiceConfig()
     {
         return array (
+            /* @TODO: factory to add deliveries */
             'invokables' => array (
                 'YimaJquery\Deliveries\SelfHosted' => 'yimaJquery\Deliveries\SelfHosted',
             ),
