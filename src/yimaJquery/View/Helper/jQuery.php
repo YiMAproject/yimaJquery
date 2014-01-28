@@ -32,9 +32,14 @@ class jQuery extends AbstractHelper
     protected $container;
 
     /**
-     * @var
+     * @var InterfaceDecorator Decorator to render data container as script
      */
     protected $decorator;
+
+    /**
+     * @var Array[InterfaceDelivery]
+     */
+    protected $delivLibs;
 
     /**
      * Invoke helper
@@ -270,7 +275,11 @@ class jQuery extends AbstractHelper
      */
     public function addLibDeliver(InterfaceDelivery $deliverance)
     {
-        // TODO: implement add library deliverance
+        $name = $deliverance->getName();
+
+        $this->delivLibs[$name] = $deliverance;
+
+        return $this;
     }
 
     /**

@@ -4,14 +4,19 @@ return array(
         /**
          * We have a service in manager for each delivery
          *
+         * foreach deliveries key we must have a service in serviceManager
+         * with name 'YimaJquery\Deliveries\GoogleCdn' in example.
+         *
          * exp. registered service as YimaJquery\Deliveries\SelfHosted
          *      all keys automatic converted to camelCase and get config
          *      from merged config to approach library address result.
          */
         'deliveries'       => array(
+            /*
             'google-cdn' => array(
                 // ...
             ),
+            */
             'self-hosted' => array(
                 // ...
             ),

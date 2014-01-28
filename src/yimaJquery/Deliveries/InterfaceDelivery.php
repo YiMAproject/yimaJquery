@@ -8,5 +8,7 @@ namespace yimaJquery\Deliveries;
  */
 interface InterfaceDelivery
 {
+    public function getName();
+
     public function getLibrarySrc($ver);
 }

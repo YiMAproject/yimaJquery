@@ -12,4 +12,9 @@ class SelfHosted implements InterfaceDelivery
     {
         // TODO: Implement getLibrarySrc() method.
     }
+
+    public function getName()
+    {
+        // TODO: Implement getName() method.
+    }
 }
