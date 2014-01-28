@@ -24,6 +24,28 @@ class DefaultDecorator implements InterfaceDecorator
     }
 
     /**
+     * Render the placeholder as script codes
+     *
+     * @param null|int|string $indent
+     * @return string
+     */
+    public function toString()
+    {
+        $items = $this->data;
+
+        $return = '';
+        foreach ($items as $item) {
+            $return .= PHP_EOL.
+                $this->startElement().$this->writeAttributes($item['attributes']).$this->endElement().
+                (($item['mode'] == 'script') ? $item['content'] : '').
+                $this->startElement(true).$this->endElement()
+            ;
+        }
+
+        return $return;
+    }
+
+    /**
      * Set data to decorate
      *
      * @param array $data
@@ -35,16 +57,65 @@ class DefaultDecorator implements InterfaceDecorator
         $this->data = $data;
     }
 
-	/**
-	 * Render the placeholder as script codes
-	 *
-	 * @param null|int|string $indent
-	 * @return string
-	 */
-	public function toString()
-	{
-	    // TODO: implement scripts output
+    /**
+     * Is the script provided valid?
+     *
+     * @param  mixed  $value  Is the given script valid?
+     *
+     * @return bool
+     */
+    public function isValid($value)
+    {
+        if (! is_array($value)
+            || !isset($value['mode'])
+            || !isset($value['overriding'])
+            || (!isset($value['content']) && !isset($value['attributes']))
+        ){
+            return false;
+        }
 
-        return 'jQuery scripts';
-	}
+        return true;
+    }
+
+    /**
+     * Start tag element
+     *
+     * @param bool $close Is close tag element?
+     *
+     * @return string
+     */
+    protected function startElement($close = false)
+    {
+        $return = '<'.(($close) ? '/' : '').'script';
+
+        return $return;
+    }
+
+    /**
+     * End tag element
+     *
+     * @return string
+     */
+    protected function endElement()
+    {
+        return '>';
+    }
+
+    /**
+     * Write down attributes
+     *
+     * @param array $attributes Key Value pair attributes
+     *
+     * @return string
+     */
+    protected function writeAttributes(array $attributes)
+    {
+        $return = '';
+        foreach ($attributes as $attr => $value)
+        {
+            $return .= " {$attr}=\"{$value}\"";
+        }
+
+        return $return;
+    }
 }

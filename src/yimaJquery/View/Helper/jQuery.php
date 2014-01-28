@@ -10,6 +10,11 @@ use Zend\View\Helper\AbstractHelper;
 /**
  * Class jQuery
  *
+ * @method appendFile($pathToLocalFileOrHttp, $overriding = false)
+ * @method prependFile($pathToLocalFileOrHttp, $overriding = false)
+ * @method appendScript($script, $overriding = false)
+ * @method prependScript($script, $overriding = false)
+ *
  * @package yimaJquery\View\Helper
  */
 class jQuery extends AbstractHelper
@@ -52,7 +57,13 @@ class jQuery extends AbstractHelper
     public function enable($ver = null)
     {
         if ($ver == null) {
-            $ver = $this->defVersion;
+            $ver = ($this->getVersion())
+                ?$this->getVersion()
+                :$this->defVersion;
+        }
+
+        if ($this->isEnabled() && $this->getVersion() == $ver) {
+            return $this;
         }
 
         $ver = (string) $ver;
@@ -136,6 +147,10 @@ class jQuery extends AbstractHelper
      */
     protected function append(array $item)
     {
+        if (!$this->isEnabled()) {
+            $this->enable();
+        }
+
         $this->getContainer()->append($item);
     }
 
@@ -146,8 +161,13 @@ class jQuery extends AbstractHelper
      */
     protected function prepend(array $item)
     {
+        if (!$this->isEnabled()) {
+            $this->enable();
+        }
+
         $container  = $this->getContainer();
         $currentArr = $container->getArrayCopy();
+
         array_unshift($currentArr, $item);
         $container->exchangeArray($currentArr);
     }
@@ -230,11 +250,24 @@ class jQuery extends AbstractHelper
      *
      * @return string
      */
-    public function getLibSrc()
+    public function getLibSrc($ver = null)
     {
-        // TODO: implement get library src from lib deliveries
+        if ($ver == null) {
+            $ver = $this->getVersion();
+        }
+
+        if (!$ver) {
+            $ver = $this->defVersion;
+        }
+
+        return '//cdn.raya-media.com/js/jquery-1.10.2.min.js'.'?ver='.$ver;
     }
 
+    /**
+     * Add a deliverance of library
+     *
+     * @param InterfaceDelivery $deliverance
+     */
     public function addLibDeliver(InterfaceDelivery $deliverance)
     {
         // TODO: implement add library deliverance
@@ -281,7 +314,7 @@ class jQuery extends AbstractHelper
 
         $data['mode']       = $mode;
         $data['content']    = $content;
-        $data['attributes'] = $attributes;
+        $data['attributes'] = array_merge($attributes, array('type' => 'text/javascript'));
         $data['overriding'] = $overriding;
 
         return $data;

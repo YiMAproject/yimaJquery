@@ -23,4 +23,13 @@ interface InterfaceDecorator
      * @return mixed
      */
     public function setData(array $data);
+
+    /**
+     * Validate data value
+     *
+     * @param mixed $value is data script is valid?
+     *
+     * @return mixed
+     */
+    public function isValid($value);
 }
