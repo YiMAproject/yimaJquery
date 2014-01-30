@@ -27,7 +27,7 @@ class AbstractClass implements InterfaceDelivery
     public function getName()
     {
         if (! $this->name) {
-            $this->name = __CLASS__;
+            $this->name = get_called_class();
         }
 
         return $this->name;
