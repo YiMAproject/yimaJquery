@@ -72,15 +72,6 @@ class jQuery extends AbstractHelper
         }
 
         $ver = (string) $ver;
-        if (! preg_match('/^[1-9]\.[0-9](\.[0-9])?$/', $ver)) {
-            throw new \Exception(
-                sprintf(
-                    'Invalid library version provided "%s"',
-                    $ver
-                )
-            );
-        }
-
         $this->enabled = $ver;
 
         return $this;
@@ -250,8 +241,7 @@ class jQuery extends AbstractHelper
     }
 
     /**
-     * Get jquery lib src from deliveries and at last
-     * from default defined in class
+     * Get jquery lib src from deliveries
      *
      * @return string
      */
@@ -265,7 +255,56 @@ class jQuery extends AbstractHelper
             $ver = $this->defVersion;
         }
 
-        return '//cdn.raya-media.com/js/jquery-1.10.2.min.js'.'?ver='.$ver;
+        $return = false;
+
+        /** @var $service InterfaceDelivery */
+        foreach ($this->getLibDelivers() as $name => $service) {
+            $return = $service->getLibSrc($ver);
+            if ($return) {
+                break;
+            }
+        }
+
+        if (!$return) {
+            throw new \Exception('Can`t resolve to library.');
+        }
+
+        return $return;
+    }
+
+    /**
+     * Get jquery lib src from specific deliver object
+     *
+     * @param string $dName library delivery service name
+     * @param string|null $ver Version
+     *
+     * @param string|null $ver
+     */
+    public function getLibSrcFrom($dName, $ver = null)
+    {
+        $dls = $this->getLibDelivers();
+        if (!isset($dls[$dName])) {
+            throw new \Exception('Deliver object with name '.$dName. 'notFound.');
+        }
+
+        /** @var $dls InterfaceDelivery */
+        $dls = $dls[$dName];
+
+        if ($ver == null) {
+            $ver = $this->getVersion();
+        }
+
+        if (!$ver) {
+            $ver = $this->defVersion;
+        }
+
+        $return = $dls->getLibSrc($ver);
+
+        if (!$return) {
+            throw new \Exception('Can`t resolve to library.');
+        }
+
+        return $return;
     }
 
     /**
@@ -280,6 +319,20 @@ class jQuery extends AbstractHelper
         $this->delivLibs[$name] = $deliverance;
 
         return $this;
+    }
+
+    /**
+     * Get lib Delivers
+     *
+     * @return array
+     */
+    public function getLibDelivers()
+    {
+        if (!$this->delivLibs) {
+            $this->delivLibs = array();
+        }
+
+        return $this->delivLibs;
     }
 
     /**

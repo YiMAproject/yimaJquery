@@ -37,7 +37,7 @@ class Module implements
     {
         return array (
             'invokables' => array (
-                'YimaJquery\Deliveries\SelfHosted' => 'yimaJquery\Deliveries\SelfHosted',
+                'YimaJquery\Deliveries\Cdn' => 'yimaJquery\Deliveries\Cdn',
             ),
         );
     }

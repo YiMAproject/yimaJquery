@@ -12,14 +12,15 @@ return array(
          *      from merged config to approach library address result.
          */
         'deliveries'       => array(
+            'cdn',
+            // or with construct options
             /*
-            'google-cdn' => array(
-                // ...
+            'cdn' => array(
+                'cdn-base'      => '//cdnjs.cloudflare.com/ajax/libs',
+                'cdn-subfolder' => 'jquery/',
+                'cdn-file-path' => '/jquery.min.js',
             ),
             */
-            'self-hosted' => array(
-                // ...
-            ),
         ),
     ),
 

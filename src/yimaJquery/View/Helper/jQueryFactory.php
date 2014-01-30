@@ -36,14 +36,31 @@ class jQueryFactory implements FactoryInterface
 
         $jQhelper = new jQuery();
 
-        foreach ($conf as $dl => $options)
+        foreach ($conf as $name => $optName)
         {
+            $options = $optName;
+            $dl      = $name;
+            if (! is_array($optName)) {
+                // we have an deliverance service without options
+                /* array (
+                    'cdn',
+                )*/
+                $dl = $optName;
+                $options = array();
+            }
+
             $dl = str_replace(' ', '', ucwords(str_replace('-', ' ', $dl)));
             $service = 'YimaJquery\Deliveries\\'.$dl;
+            if (! $serviceManager->has($service)) {
+                trigger_error('Service '.$service.' not found.', E_USER_WARNING);
 
-            if ($serviceManager->has($service)) {
-                $jQhelper->addLibDeliver($serviceManager->get($service));
+                continue;
             }
+
+            $service = $serviceManager->get($service);
+            $service->setOptions($options);
+
+            $jQhelper->addLibDeliver($service);
         }
 
         return $jQhelper;
