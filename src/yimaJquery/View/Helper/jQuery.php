@@ -217,8 +217,9 @@ class jQuery extends AbstractHelper
         $decorator->setData((array) $this->getContainer());
 
         // set options used to render scripts
-        $decorator->no_conflict_mode = $this->isNoConflict();
-        $decorator->base_library     = $this->getLibSrc();
+        $decorator->no_conflict_mode    = $this->isNoConflict();
+        $decorator->base_library        = $this->getLibSrc();
+        $decorator->no_conflict_handler = $this->getNoConflictHandler();
 
         return (string) $decorator;
     }

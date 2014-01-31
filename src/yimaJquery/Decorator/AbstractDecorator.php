@@ -104,4 +104,28 @@ abstract class AbstractDecorator extends AbstractOptions
     {
         return $this->noConflictMode;
     }
+
+    /**
+     * Set noConflict handler
+     *
+     * @param string $handler
+     *
+     * @return $this
+     */
+    public function setNoConflictHandler($handler)
+    {
+        $this->noConflictHandler = (string) $handler;
+
+        return $this;
+    }
+
+    /**
+     * Get noConflict handler
+     *
+     * @return mixed
+     */
+    public function getNoConflictHandler()
+    {
+       return $this->noConflictHandler;
+    }
 }

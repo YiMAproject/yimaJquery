@@ -29,10 +29,26 @@ class DefaultDecorator extends AbstractDecorator
         $items = $this->data;
 
         // set options {
-        # base library at top of other scripts
+        if ($this->getNoConflictMode()) {
+            // add script for noConflict mode
+            $scriptItem = array(
+                'mode'       => 'script',
+                'content'    => ($this->getNoConflictHandler())
+                        ? 'var '.$this->getNoConflictHandler().' = '. 'jQuery.noConflict();'
+                        : 'jQuery.noConflict();',
+                'attributes' => array(
+                    'type' => 'text/javascript',
+                ),
+            );
+
+            # add to items
+            array_unshift($items, $scriptItem);
+        }
+        // .........
         $baseLibrary = $this->getBaseLibrary();
         if ($baseLibrary) {
-            $baseItem = array(
+            // add base script library
+            $scriptItem = array(
                 'mode'       => 'file',
                 'content'    => null,
                 'attributes' => array(
@@ -42,7 +58,7 @@ class DefaultDecorator extends AbstractDecorator
             );
 
             # add to items
-            array_unshift($items, $baseItem);
+            array_unshift($items, $scriptItem);
         }
         // ... }
 
@@ -80,7 +96,24 @@ class DefaultDecorator extends AbstractDecorator
      */
     protected function overrideScript($script)
     {
-        return $script;
+        $noConflict = $this->getNoConflictMode();
+        if (!$noConflict) {
+            return $script;
+        }
+
+        $jQ = ($this->getNoConflictHandler())
+            ? $this->getNoConflictHandler()
+            : 'jQuery';
+
+        $return = preg_replace_callback (
+            '/\$[\.|\(](\"|\'|\w[\w\d]*)/',
+            function ($matches) use ($jQ) {
+                return str_replace('$', $jQ, $matches[0]);
+            },
+            $script
+        );
+
+        return $return;
     }
 
     /**
