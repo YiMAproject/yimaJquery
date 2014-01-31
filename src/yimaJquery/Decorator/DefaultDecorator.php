@@ -6,13 +6,8 @@ namespace yimaJquery\Decorator;
  *
  * @package yimaJquery\Decorator
  */
-class DefaultDecorator implements InterfaceDecorator
+class DefaultDecorator extends AbstractDecorator
 {
-    /**
-     * @var array Data set
-     */
-    protected $data;
-
     /**
      * To String Object
      *
@@ -33,28 +28,59 @@ class DefaultDecorator implements InterfaceDecorator
     {
         $items = $this->data;
 
-        $return = '';
+        // set options {
+        # base library at top of other scripts
+        $baseLibrary = $this->getBaseLibrary();
+        if ($baseLibrary) {
+            $baseItem = array(
+                'mode'       => 'file',
+                'content'    => null,
+                'attributes' => array(
+                    'src'  => $baseLibrary,
+                    'type' => 'text/javascript',
+                ),
+            );
+
+            # add to items
+            array_unshift($items, $baseItem);
+        }
+        // ... }
+
+        $attachedBaseLib = false;
+        $return = array('file' => '', 'script' => '');
         foreach ($items as $item) {
-            $return .= PHP_EOL.
+            if ($item['mode'] == 'file' && isset($item['attributes']['src'])) {
+                // looking for duplicated base library
+                if ($item['attributes']['src'] == $baseLibrary && !$attachedBaseLib) {
+                    $attachedBaseLib = true;
+                } else {
+                    continue;
+                }
+            }
+
+            $return[$item['mode']] .= PHP_EOL.
                 $this->startElement().$this->writeAttributes($item['attributes']).$this->endElement().
-                (($item['mode'] == 'script') ? $item['content'] : '').
+                (($item['mode'] == 'script') ? $this->overrideScript($item['content']) : '').
                 $this->startElement(true).$this->endElement()
             ;
         }
+
+        $return = $return['file'].PHP_EOL.
+            $return['script'].PHP_EOL;
 
         return $return;
     }
 
     /**
-     * Set data to decorate
+     * Correct scripts to noConflict mode
      *
-     * @param array $data
+     * @param string $script Script
      *
-     * @return mixed
+     * @return string
      */
-    public function setData(array $data)
+    protected function overrideScript($script)
     {
-        $this->data = $data;
+        return $script;
     }
 
     /**
@@ -68,7 +94,6 @@ class DefaultDecorator implements InterfaceDecorator
     {
         if (! is_array($value)
             || !isset($value['mode'])
-            || !isset($value['overriding'])
             || (!isset($value['content']) && !isset($value['attributes']))
         ){
             return false;
@@ -76,6 +101,7 @@ class DefaultDecorator implements InterfaceDecorator
 
         return true;
     }
+
 
     /**
      * Start tag element

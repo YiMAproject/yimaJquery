@@ -3,17 +3,17 @@ namespace yimaJquery\View\Helper;
 
 use ArrayObject;
 use yimaJquery\Decorator\DefaultDecorator;
-use yimaJquery\Decorator\InterfaceDecorator;
+use yimaJquery\Decorator\AbstractDecorator;
 use yimaJquery\Deliveries\InterfaceDelivery;
 use Zend\View\Helper\AbstractHelper;
 
 /**
  * Class jQuery
  *
- * @method appendFile($pathToLocalFileOrHttp, $overriding = false)
- * @method prependFile($pathToLocalFileOrHttp, $overriding = false)
- * @method appendScript($script, $overriding = false)
- * @method prependScript($script, $overriding = false)
+ * @method appendFile($pathToLocalFileOrHttp)
+ * @method prependFile($pathToLocalFileOrHttp)
+ * @method appendScript($script)
+ * @method prependScript($script)
  *
  * @package yimaJquery\View\Helper
  */
@@ -26,20 +26,34 @@ class jQuery extends AbstractHelper
 
     protected $defVersion = '1.9.0';
 
+
+    /**
+     * @var boolean Is jQuery in noConflict mode
+     */
+    protected $isNoConflict = false;
+
+    /**
+     * @var string noConflict handler if not set used jQuery
+     */
+    protected $noConflictHandler;
+
+
     /**
      * @var ArrayObject
      */
     protected $container;
 
     /**
-     * @var InterfaceDecorator Decorator to render data container as script
+     * @var AbstractDecorator Decorator to render data container as script
      */
     protected $decorator;
+
 
     /**
      * @var Array[InterfaceDelivery]
      */
     protected $delivLibs;
+
 
     /**
      * Invoke helper
@@ -116,18 +130,16 @@ class jQuery extends AbstractHelper
 
         switch ($mode) {
             case 'script':
-                // appendScript($script, $overriding = false)
-                $overriding = (isset($args[1])) ? (boolean) $args[1] : false;
-                $item       = $this->createData($mode, $content, $overriding);
+                // appendScript($script)
+                $item       = $this->createData($mode, $content);
 
                 $this->$action($item);
                 break;
             case 'file':
-                // appendFile($pathToLocalFileOrHttp, $overriding = false)
-                $overriding   = (isset($args[1])) ? (boolean) $args[1] : false;
+                // appendFile($pathToLocalFileOrHttp)
                 $attrs['src'] = $content;
                 $content      = null;
-                $item         = $this->createData($mode, $content, $overriding, $attrs);
+                $item         = $this->createData($mode, $content, $attrs);
 
                 $this->$action($item);
                 break;
@@ -137,35 +149,51 @@ class jQuery extends AbstractHelper
     }
 
     /**
-     * Append data to container
+     * Set jQuery to noConflict mode
      *
-     * @param array $item Created Data
+     * @param string $handler jQuery Handler
+     *
+     * @return $this
      */
-    protected function append(array $item)
+    public function setNoConflict($bool = true)
     {
-        if (!$this->isEnabled()) {
-            $this->enable();
-        }
+        $this->isNoConflict = $bool;
 
-        $this->getContainer()->append($item);
+        return $this;
     }
 
     /**
-     * Prepend data to container
+     * Is jQuery in no conflict mode?
      *
-     * @param array $item Created Data
+     * @return bool
      */
-    protected function prepend(array $item)
+    public function isNoConflict()
     {
-        if (!$this->isEnabled()) {
-            $this->enable();
-        }
+        return $this->isNoConflict;
+    }
 
-        $container  = $this->getContainer();
-        $currentArr = $container->getArrayCopy();
+    /**
+     * Set noConflict Handler
+     *
+     * @param string $handler noConflict handler exp. $j
+     *
+     * @return $this
+     */
+    public function setNoConflictHandler($handler)
+    {
+        $this->noConflictHandler = (string) $handler;
 
-        array_unshift($currentArr, $item);
-        $container->exchangeArray($currentArr);
+        return $this;
+    }
+
+    /**
+     * Get noConflict handler
+     *
+     * @return string
+     */
+    public function getNoConflictHandler()
+    {
+        return $this->noConflictHandler;
     }
 
     /**
@@ -188,17 +216,54 @@ class jQuery extends AbstractHelper
         $decorator = $this->getDecorator();
         $decorator->setData((array) $this->getContainer());
 
+        // set options used to render scripts
+        $decorator->no_conflict_mode = $this->isNoConflict();
+        $decorator->base_library     = $this->getLibSrc();
+
         return (string) $decorator;
+    }
+
+
+    /**
+     * Append data to container
+     *
+     * @param array $item Created Data
+     */
+    protected function append(array $item)
+    {
+        if (!$this->isEnabled()) {
+            $this->enable();
+        }
+
+        $this->getContainer()->append($item);
+    }
+
+    /**
+     * Prepend data to container
+     *
+     * @param array $item Created Data
+     */
+    protected function prepend(array $item)
+    {
+        if (! $this->isEnabled()) {
+            $this->enable();
+        }
+
+        $container  = $this->getContainer();
+        $currentArr = $container->getArrayCopy();
+
+        array_unshift($currentArr, $item);
+        $container->exchangeArray($currentArr);
     }
 
     /**
      * Set decorator renderer of container data
      *
-     * @param InterfaceDecorator $decorator Decorator instance
+     * @param AbstractDecorator $decorator Decorator instance
      *
      * @return $this
      */
-    public function setDecorator(InterfaceDecorator $decorator)
+    public function setDecorator(AbstractDecorator $decorator)
     {
         $decorator = clone $decorator;
         $this->decorator = $decorator;
@@ -209,7 +274,7 @@ class jQuery extends AbstractHelper
     /**
      * Get decorator for rendering data in container
      *
-     * @return InterfaceDecorator
+     * @return AbstractDecorator
      */
     public function getDecorator()
     {
@@ -218,6 +283,32 @@ class jQuery extends AbstractHelper
         }
 
         return $this->decorator;
+    }
+
+    /**
+     * Set container for scripts
+     *
+     * @param ArrayObject $container
+     */
+    public function setContainer(ArrayObject $container)
+    {
+        $this->container = $container;
+
+        return $this;
+    }
+
+    /**
+     * Get container for scripts
+     *
+     * @return ArrayObject
+     */
+    public function getContainer()
+    {
+        if (! $this->container) {
+            $this->container = new ArrayObject(array(), ArrayObject::ARRAY_AS_PROPS);
+        }
+
+        return $this->container;
     }
 
     /**
@@ -301,32 +392,6 @@ class jQuery extends AbstractHelper
     }
 
     /**
-     * Set container for scripts
-     *
-     * @param ArrayObject $container
-     */
-    public function setContainer(ArrayObject $container)
-    {
-        $this->container = $container;
-
-        return $this;
-    }
-
-    /**
-     * Get container for scripts
-     *
-     * @return ArrayObject
-     */
-    public function getContainer()
-    {
-        if (! $this->container) {
-            $this->container = new ArrayObject(array(), ArrayObject::ARRAY_AS_PROPS);
-        }
-
-        return $this->container;
-    }
-
-    /**
      * Create data item containing all necessary components of script
      *
      * @param  string $mode       Type of data          script|file|link....
@@ -335,14 +400,13 @@ class jQuery extends AbstractHelper
      *
      * @return Array
      */
-    protected function createData($mode, $content = null, $overriding = false, array $attributes = array())
+    protected function createData($mode, $content = null, array $attributes = array())
     {
         $data               = array();
 
         $data['mode']       = $mode;
         $data['content']    = $content;
         $data['attributes'] = array_merge($attributes, array('type' => 'text/javascript'));
-        $data['overriding'] = $overriding;
 
         return $data;
     }
