@@ -1,10 +1,11 @@
 {
     "name": "rayamedia/yima-jquery",
     "type": "yima-core-module",
-    "description": "jQuery integration into application.",
+    "description": "jQuery view helper for integration into application.",
     "keywords": [
         "jquery",
-        "integration",
+        "jquery integration",
+        "jquery view helper",
         "zf2 module",
         "zf2",
         "yima",

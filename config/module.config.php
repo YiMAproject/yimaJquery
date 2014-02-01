@@ -2,14 +2,11 @@
 return array(
     'yima-jquery' => array(
         /**
-         * We have a service in manager for each delivery
+         * Each Delivery Resolve to a jQuery version library address
          *
          * foreach deliveries key we must have a service in serviceManager
-         * with name 'YimaJquery\Deliveries\GoogleCdn' in example.
+         * with name 'YimaJquery\Deliveries\[ServiceName]' in example for key 'service-name'
          *
-         * exp. registered service as YimaJquery\Deliveries\SelfHosted
-         *      all keys automatic converted to camelCase and get config
-         *      from merged config to approach library address result.
          */
         'deliveries'       => array(
             'cdn',
@@ -22,29 +19,9 @@ return array(
             ),
             */
         ),
-    ),
 
-	'controllers' => array(
-		'invokables' => array(
-			'yimaJquery/Controller/Attach' => 'yimaJquery\Controller\AttachController'
-		),
-	),
-	'router' => array(
-		'routes' => array(
-			'yimaJquery' => array(
-				'type'    => 'Segment',
-				'options' => array(
-					'route'    => '/yimaJquery/js/[:overidding[:filepath]]',
-					'constraints' => array(
-						//'overidding' => 'override|regular',
-						'filepath'   => '(/[\w-]+).*',
-					),
-					'defaults' => array(
-						'controller' => 'yimaJquery/Controller/Attach',
-						'action'     => 'script',
-					),
-				),
-			),
-		),
-	),
+        // decorator class or registered service
+        // decorators get container of scripts and render as html or whatever else
+        'decorator' => 'yimaJquery\Decorator\DefaultDecorator'
+    ),
 );

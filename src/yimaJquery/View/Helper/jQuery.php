@@ -213,12 +213,23 @@ class jQuery extends AbstractHelper
      */
     public function toString()
     {
+        $this->prepareDecorator();
+
+        return (string) $this->getDecorator();
+    }
+
+    /**
+     * Prepare decorator, inject data to decorator
+     *
+     * @return $this
+     */
+    public function prepareDecorator()
+    {
         $decorator = $this->getDecorator();
         $decorator->setData((array) $this->getContainer());
 
-        return (string) $decorator;
+        return $this;
     }
-
 
     /**
      * Append data to container
