@@ -116,6 +116,6 @@ Enable module in application config
 
 
 ## Support ##
-To report bugs or request features, please visit the [Issue Tracker](https://github.com/RayaMedia/yimaTheme/issues).
+To report bugs or request features, please visit the [Issue Tracker](https://github.com/RayaMedia/yimaJquery/issues).
 
 * Please feel free to contribute with new issues, requests and code fixes or new features. *
