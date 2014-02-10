@@ -87,7 +87,8 @@ class DefaultDecorator extends AbstractDecorator
                 // looking for duplicated base library
                 if ($item['attributes']['src'] == $this->getBaseLibrary() && !$attachedBaseLib) {
                     $attachedBaseLib = true;
-                } else {
+                } elseif ($item['attributes']['src'] == $this->getBaseLibrary()) {
+                    // we have attached base library before
                     continue;
                 }
             }
